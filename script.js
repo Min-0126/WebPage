@@ -202,6 +202,38 @@ if (skillsSection) {
     skillsObserver.observe(skillsSection);
 }
 
+
+// === ChatGPT API Integration (Frontend) ===
+const chatBox = document.getElementById("chat-box");
+const chatInput = document.getElementById("chat-input");
+const chatSend = document.getElementById("chat-send");
+
+function addMessage(sender, text) {
+    const msg = document.createElement("p");
+    msg.innerHTML = `<b>${sender}:</b> ${text}`;
+    chatBox.appendChild(msg);
+    chatBox.scrollTop = chatBox.scrollHeight;
+}
+
+chatSend.addEventListener("click", async () => {
+    const userMessage = chatInput.value;
+    if (!userMessage.trim()) return;
+
+    addMessage("You", userMessage);
+    chatInput.value = "";
+
+    // 🚨 여기서는 OpenAI API 직접 호출 ❌ → 내 백엔드 서버로 요청
+    const response = await fetch("http://localhost:3000/health", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message: userMessage })
+    });
+
+    const data = await response.json();
+    addMessage("ChatGPT", data.reply);
+});
+
+
 // Console welcome message
 console.log(`
 🚀 Welcome to Jongmin Kim's World!
