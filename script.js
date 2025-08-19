@@ -204,34 +204,66 @@ if (skillsSection) {
 
 
 // === ChatGPT API Integration (Frontend) ===
+
 const chatBox = document.getElementById("chat-box");
 const chatInput = document.getElementById("chat-input");
 const chatSend = document.getElementById("chat-send");
 
 function addMessage(sender, text) {
-    const msg = document.createElement("p");
-    msg.innerHTML = `<b>${sender}:</b> ${text}`;
-    chatBox.appendChild(msg);
-    chatBox.scrollTop = chatBox.scrollHeight;
+  const msg = document.createElement("p");
+  msg.innerHTML = `<b>${sender}:</b> ${text}`;
+  chatBox.appendChild(msg);
+  chatBox.scrollTop = chatBox.scrollHeight;
 }
 
-chatSend.addEventListener("click", async () => {
-    const userMessage = chatInput.value;
-    if (!userMessage.trim()) return;
+// Optional: prevent double-click spamming while a request is in flight
+let isSending = false;
 
-    addMessage("You", userMessage);
-    chatInput.value = "";
+async function sendMessage() {
+  if (isSending) return;
 
-    // 🚨 여기서는 OpenAI API 직접 호출 ❌ → 내 백엔드 서버로 요청
-    const response = await fetch("http://localhost:3000/health", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message: userMessage })
+  const userMessage = chatInput.value;
+  if (!userMessage.trim()) return;
+
+  addMessage("You", userMessage);
+  chatInput.value = "";
+  isSending = true;
+  chatSend.disabled = true;
+
+  try {
+    const response = await fetch("/api/chat", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ message: userMessage })
     });
 
+    if (!response.ok) {
+      const errText = await response.text();
+      addMessage("ChatGPT", `❌ ${response.status} ${response.statusText} — ${errText}`);
+      return;
+    }
+
     const data = await response.json();
-    addMessage("ChatGPT", data.reply);
+    const reply = (data && typeof data.reply === "string") ? data.reply : "⚠️ No reply field in server response.";
+    addMessage("ChatGPT", reply);
+  } catch (e) {
+    addMessage("ChatGPT", `❌ Network error: ${e.message}`);
+  } finally {
+    isSending = false;
+    chatSend.disabled = false;
+  }
+}
+
+chatSend.addEventListener("click", sendMessage);
+
+// Optional: Press Enter to send (since #chat-input is a <input type="text">)
+chatInput.addEventListener("keydown", (e) => {
+  if (e.key === "Enter") {
+    e.preventDefault();
+    sendMessage();
+  }
 });
+
 
 
 // Console welcome message
