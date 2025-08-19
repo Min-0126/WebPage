@@ -231,7 +231,7 @@ async function sendMessage() {
   chatSend.disabled = true;
 
   try {
-    const response = await fetch("/api/chat", {
+    const response = await fetch("https://my-portfolio-backend-ajl5.onrender.com/api/chat", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ message: userMessage })
