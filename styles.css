@@ -440,6 +440,16 @@ ul.project-description{
     color: white;
 }
 
+
+#chat-box {
+  background: #f8fafc;
+  border-radius: 8px;
+}
+#chat-box p {
+  margin: 0.5rem 0;
+}
+
+
 /* Responsive Design */
 @media (max-width: 768px) {
     .nav-menu {
