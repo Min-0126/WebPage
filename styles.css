@@ -339,10 +339,29 @@ body {
 /*Certificate*/
 
 .certificate-picture{
-    display: flex;
-    justify-content: center;
+    width: 100%;
+    aspect-ratio: 4 / 3;          /* 박스 비율 고정 (원하면 16/9, 3/2 등으로 변경 가능) */
+    display: flex;                 /* 중앙 정렬 */
     align-items: center;
-    position: relative;
+    justify-content: center;
+    background: #fff;              /* 배경 */
+    border: 2px solid #ccc;        /* 테두리 */
+}
+
+.certificate-image{
+    max-width: 100%;
+    max-height: 100%;
+    width: auto;
+    height: auto;
+    object-fit: contain;    /* 비율 유지하며 박스 안에 전부 들어오게 */
+    display: block;
+}
+
+.certificate-content{
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 0.5rem;
+    align-items: stretch;
 }
 
 /*Work Experience*/
@@ -389,15 +408,15 @@ body {
 }
 
 
-/*Proejct Section*/
-.project-content, .certificate-content {
+/*Project Section*/
+.project-content {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 2rem;
     align-items: stretch;
 }
 
-.project-block, .certificate-block{
+.project-block{
     background: #f8fafc;
     border-radius: 12px;
     margin-bottom:2rem;
