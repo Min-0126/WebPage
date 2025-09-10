@@ -336,6 +336,15 @@ body {
     font-weight: 500;
 }
 
+/*Certificate*/
+
+.certificate-picture{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+
 /*Work Experience*/
 .work-content {
     display: grid;
@@ -381,14 +390,14 @@ body {
 
 
 /*Proejct Section*/
-.project-content {
+.project-content, .certificate-content {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 2rem;
     align-items: stretch;
 }
 
-.project-block{
+.project-block, .certificate-block{
     background: #f8fafc;
     border-radius: 12px;
     margin-bottom:2rem;
